@@ -1,14 +1,24 @@
 from datetime import date
 import subprocess as sp
 from datetime import *
-import datetime
 import os ,sys
 import yaml
 username=sys.argv[1]
 password=sys.argv[2]
 tenantid=sys.argv[3]
 
+lock_list=[]
+def lock_list_fun():
+    sp.getoutput('az lock list -o yaml >locklist.yaml')
+    with open('locklist.yaml', 'r') as file:
+        temp_list = yaml.safe_load(file)
+    for i in temp_list:
+        temp=i['resourceGroup']
+        lock_list.append(temp)
+
+
 def delete():
+    lock_list_fun()
     sp.getoutput('az group list --tag schedule-deletion   -o yaml > results.yaml')
 
     with open('results.yaml', 'r') as file:
@@ -21,7 +31,12 @@ def delete():
         today_date = datetime.now().date()
 
         if today_date == date_taged or today_date > date_taged:
-            exit_status =os.system(f'az group delete -n {rg_name} -y')
+            if rg_name in lock_list:
+                print(rg_name,"======>  This resource is locked so it canot be deleted.")
+            else:
+                exit_status =os.system(f'az group delete -n {rg_name} -y')
+                print(rg_name,"=====>This will be deleted")
+
             if(exit_status==0):
                 print("deleted RG"+" --> "+ rg_name)
             else:
@@ -40,3 +55,4 @@ if(authout[0]==0):
     delete()
 else:
     print("Authentication failed",authout[1])
+
