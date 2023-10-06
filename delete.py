@@ -3,25 +3,28 @@ import subprocess as sp
 from datetime import *
 import os ,sys
 import yaml
-# username=sys.argv[1]
-# password=sys.argv[2]
-# tenantid=sys.argv[3]
+username=sys.argv[1]
+password=sys.argv[2]
+tenantid=sys.argv[3]
 
 
 lock_list=[]
 def lock_list_fun():
-    # test=sp.run('az lock list -o yaml >locklist.yaml')
     command="az lock list -o yaml >locklist.yaml"
     result = sp.run(command, shell=True, stdout=sp.PIPE, stderr=sp.PIPE)
     exit_code = result.returncode
     error=result.stderr
     if exit_code == "0" :
+        print("Canot find the locklist having error====>")
         print(error)
+        print('\n')
     with open('locklist.yaml', 'r') as file:
         temp_list = yaml.safe_load(file)
     for i in temp_list:
         temp=i['resourceGroup']
         lock_list.append(temp)
+        
+    print("Locked RG are ====> "+ lock_list)
 
 
 def delete():
@@ -55,16 +58,14 @@ def delete():
             print(f"{rg_name} resource group will be delete in {date_taged} after {(date_taged - today_date).days} days")
 
 
-# def auth():
-#     authoutput=sp.getstatusoutput("az login --service-principal -u {} -p {} --tenant {}".format(username,password,tenantid))
-#     return authoutput
-# authout=auth()
+def auth():
+    authoutput=sp.getstatusoutput("az login --service-principal -u {} -p {} --tenant {}".format(username,password,tenantid))
+    return authoutput
+authout=auth()
 
-# if(authout[0]==0):
-#     print("Authentication is successed")
-#     delete()
-# else:
-#     print("Authentication failed",authout[1])
+if(authout[0]==0):
+    print("Authentication is successed")
+    delete()
+else:
+    print("Authentication failed",authout[1])
 
-
-delete()
