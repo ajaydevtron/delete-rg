@@ -18,12 +18,13 @@ def lock_list_fun():
         print("Canot find the locklist having error====>")
         print(error)
         print('\n')
+        exit()
     with open('locklist.yaml', 'r') as file:
         temp_list = yaml.safe_load(file)
     for i in temp_list:
         temp=i['resourceGroup']
         lock_list.append(temp)
-        
+
     print("Locked RG are ====> "+ lock_list)
 
 
