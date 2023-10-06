@@ -37,10 +37,10 @@ def delete():
                 exit_status =os.system(f'az group delete -n {rg_name} -y')
                 print(rg_name,"=====>This will be deleted")
 
-            if(exit_status==0):
-                print("deleted RG"+" --> "+ rg_name)
-            else:
-                print("Command fail to execute with exit status -> %d" % exit_status)
+                if(exit_status==0):
+                    print("deleted RG"+" --> "+ rg_name)
+                else:
+                    print("Command fail to execute with exit status -> %d" % exit_status)
         else:
             print(f"{rg_name} resource group will be delete in {date_taged} after {(date_taged - today_date).days} days")
 
