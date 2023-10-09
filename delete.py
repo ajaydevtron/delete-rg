@@ -40,6 +40,7 @@ def delete():
         date_taged=entry['tags']['schedule-deletion']
         date_taged = datetime.strptime(date_taged, "%Y-%m-%d").date()
         today_date = datetime.now().date()
+        print(rg_name +"===========>"+ date_taged)
 
         if today_date == date_taged or today_date > date_taged:
             if rg_name in lock_list:
