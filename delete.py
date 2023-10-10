@@ -14,7 +14,7 @@ def lock_list_fun():
     result = sp.run(command, shell=True, stdout=sp.PIPE, stderr=sp.PIPE)
     exit_code = result.returncode
     error=result.stderr
-    if exit_code == "0" :
+    if exit_code != "0" :
         print("Canot find the locklist having error====>")
         print(error)
         print('\n')
